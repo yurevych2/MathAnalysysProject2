@@ -112,6 +112,8 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     :param start: x_0
     :param epsilon: accuracy of the final point
     :return: point at x-axis
+    >>> newtons_method('x**2 - 2*x', a=-2, b=3, start=-1, epsilon=1)
+    -1
     """
     x0 = start
     while abs(evaluate_at_point(func, x0)) - epsilon > 0:
