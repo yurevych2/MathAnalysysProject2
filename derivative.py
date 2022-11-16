@@ -120,7 +120,3 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
         x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func,x0))
     
     return x0
-
-if __name__=='__main__':
-    # import doctest
-    # print(doctest.testmod())
