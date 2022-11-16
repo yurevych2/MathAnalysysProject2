@@ -1,3 +1,5 @@
+from math import sin, cos, e
+
 def single_derivative(func: str) -> str:
     """
     Computes derivative of a single function.
