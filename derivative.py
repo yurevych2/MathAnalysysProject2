@@ -113,9 +113,12 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     :param epsilon: accuracy of the final point
     :return: point at x-axis
     """
-    pass
+    x0 = start
+    while abs(evaluate_at_point(func, x0)) - epsilon > 0:
+        x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func,x0))
+    
+    return x0
 
 if __name__=='__main__':
     # import doctest
     # print(doctest.testmod())
-    print(evaluate_at_point("x*sin(x) + -2*e^(x)", '2'))
