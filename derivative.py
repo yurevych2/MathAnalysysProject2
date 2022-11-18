@@ -115,8 +115,13 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     >>> newtons_method('x**2 - 2*x', a=-2, b=3, start=-1, epsilon=1)
     -1
     """
+    if b<=a:
+        return 'Incorrect segment [a; b], b<=a'
     x0 = start
-    while abs(evaluate_at_point(func, x0)) - epsilon > 0:
-        x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func,x0))
+    while (abs(evaluate_at_point(func, x0)) - epsilon > 0) or (b-x0 < epsilon):
+        try:
+            x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func,x0))
+        except ZeroDivisionError:
+            return 'F(x0) = 0. Division by zero'
     
     return x0
