@@ -167,8 +167,17 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     >>> newtons_method('x**2 - 2*x', a=-2, b=3, start=-1, epsilon=1)
     -1
     """
+    if b < a:
+        raise ValueError('Incorrect input. B < A')
+    MAX_ITER = 1000
+    iter = 0
     x0 = start
     while abs(evaluate_at_point(func, x0)) - epsilon > 0:
         x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func),x0)
+        if iter > MAX_ITER:
+            raise ValueError('THE RANGE IS TOO BIG OR THERE IS NO X AT [a, b]')
+        iter += 1
     
     return x0
+
+newtons_method('x**2 - 2*x', a=5, b=3, start=-1, epsilon=1)
