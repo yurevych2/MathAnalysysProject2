@@ -137,21 +137,17 @@ def evaluate_at_point(function: str, point: float) -> float:
     :return: value of the function when x == point
 
     >>> evaluate_at_point("x*sin(x) + -2*e^(x)", '2') == 2*sin(2) + -2*e**(2)
+    True
     """
     function = function.replace('^', '**')
     func_to_eval = ''
-    for index, element in enumerate(function):
+    for element in function:
         if element == 'x':
-            if function[index-1].isnumeric():
-                func_to_eval = func_to_eval + '*x'
-            if function[index+1].isnumeric():
-                func_to_eval = func_to_eval + 'x*'
-            if not (function[index-1].isnumeric() and function[index+1].isnumeric()):
-                func_to_eval = func_to_eval + 'x'
+            func_to_eval = func_to_eval + '(x)'
         else:
             func_to_eval += element
     
-    return eval(func_to_eval.replace('x', point))
+    return eval(func_to_eval.replace('x', str(point)))
 
 
 def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) -> float:
@@ -173,6 +169,6 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     """
     x0 = start
     while abs(evaluate_at_point(func, x0)) - epsilon > 0:
-        x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func,x0))
+        x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func),x0)
     
     return x0
