@@ -13,8 +13,58 @@ def single_derivative(func: str) -> str:
     >>> single_derivative("121")
     '0'
     """
-    pass
+    derivatives = {"cos":"-sin(x)", "sin" : "cos(x)", "e^" : "e^(x)", "C" : 0, "x^" : "k*x^(k-1)"}
+    nums = [str(i) for i in range (0,10)]
+    func.strip()
+    external = ""
+    argument = ""
+    fin_deriv = ""
+    
+    for i, symbol in enumerate(func):
+        if symbol == "(":
+            argument = func[i+1:-1]
+            break
+        external += symbol
+    argument = argument.replace("x", "")
+    for value in derivatives:
+        if external == value:
+            external = derivatives[value]
 
+    if external[0] == "c":
+        if argument[0] == "-":
+            fin_deriv += argument + "*" + external.replace("x", argument[1]+"x")
+        if argument[0] != "-":
+            fin_deriv += argument + "*" + external.replace("x", argument+"x")
+
+    if external[0:2] == "-s":
+        if argument[0] == "-":
+            external = external.replace("x", argument[1]+"x")
+            external = external.replace("-", "")
+            fin_deriv += "-" + argument[1] + "*" + external
+        else:
+            external = external.replace("-", "")
+            external = external.replace("x", argument + "x")
+            fin_deriv += "-" + argument + "*" + external
+
+    if external[0] == "e":
+        if argument[0] == "-":
+            external = external.replace("x", argument[1]+"x")
+            external = external.replace("-", "")
+            fin_deriv += "-" + argument[1] + "*" + external
+        else:
+            external = external.replace("x", argument + "x")
+            fin_deriv +=  argument + "*" + external
+    
+    if external[0] in nums:
+        fin_deriv = "0"
+    
+    if external[0] == "k":
+        new_a = int(argument)
+        external = external.replace("k*","")
+        external = external.replace("k-1", str(new_a - 1))
+        fin_deriv += argument + "*" + external
+    
+    return fin_deriv
 
 def combine_multipliers(der, others):
     """
