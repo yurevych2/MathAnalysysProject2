@@ -1,4 +1,6 @@
-def single_derivative(func: str) -> str:
+from math import sin, cos, e
+
+def single_derivative(func: str) -> str: #IT IS LISA`s FUNCTION. NO HATE, NO TOXIC
     """
     Computes derivative of a single function.
     Some examples:
@@ -13,10 +15,65 @@ def single_derivative(func: str) -> str:
     >>> single_derivative("121")
     '0'
     """
-    pass
+    derivatives = {"cos":"-sin(x)", "sin" : "cos(x)", "e^" : "e^(x)", "C" : 0, "x^" : "k*x^(k-1)"}
+    nums = [str(i) for i in range (0,10)]
+    func.strip()
+    external = ""
+    argument = ""
+    fin_deriv = ""
+    
+    for i, symbol in enumerate(func):
+        if symbol == "(":
+            argument = func[i+1:-1]
+            break
+        external += symbol
+    argument = argument.replace("x", "")
+    for value in derivatives:
+        if external == value:
+            external = derivatives[value]
 
+    if external[0] == "c":
+        if argument == "":
+            fin_deriv += external
+        elif argument[0] == "-":
+            fin_deriv += argument + "*" + external.replace("x", argument[1]+"x")
+        elif argument[0] != "-":
+            fin_deriv += argument + "*" + external.replace("x", argument+"x")
 
-def combine_multipliers(der, others):
+    if external[0:2] == "-s":
+        if argument == "":
+            fin_deriv += external
+        elif argument[0] == "-":
+            external = external.replace("x", argument[1]+"x")
+            external = external.replace("-", "")
+            fin_deriv += "-" + argument[1] + "*" + external
+        else:
+            external = external.replace("-", "")
+            external = external.replace("x", argument + "x")
+            fin_deriv += "-" + argument + "*" + external
+
+    if external[0] == "e":
+        if argument == "":
+            fin_deriv += external
+        elif argument[0] == "-":
+            external = external.replace("x", argument +"x")
+            fin_deriv += "-" + argument[1] + "*" + external
+        else:
+            external = external.replace("x", argument + "x")
+            fin_deriv +=  argument + "*" + external
+    
+    if external[0] in nums:
+        fin_deriv = "0"
+    
+    if external[0] == "k":
+        new_a = int(argument)
+        external = external.replace("k*","")
+        external = external.replace("k-1", str(new_a - 1))
+        fin_deriv += argument + "*" + external
+
+    return fin_deriv
+
+def combine_multipliers(der, others): #IT IS LISA`s FUNCTION. NO HATE, NO TOXIC
     """
     :param der: already found derivative of a single function
     :param others: other functions-multipliers
@@ -30,7 +87,13 @@ def combine_multipliers(der, others):
     >>> combine_multipliers(found_derivative, other)
     '2'
     """
-    pass
+    all_mult = [der] + others
+    comb_mult = ""
+    for element in all_mult:
+        comb_mult += element+"*"
+    comb_mult = comb_mult[:-1]
+    
+    return comb_mult
 
 
 def derivative_of_product(some_func: list) -> str:
@@ -71,17 +134,28 @@ def find_derivative(equation: str) -> str:
     return " + ".join(separately_computed)
 
 
-def evaluate_at_point(function: str, point: float) -> float:
+def evaluate_at_point(function: str, point: float) -> float: # Nataliia`s function
     """
     Evaluates a function at a certain point.
     :param function: same requirements as in the previous task.
     :param point: some value of x
     :return: value of the function when x == point
+
+    >>> evaluate_at_point("x*sin(x) + -2*e^(x)", '2') == 2*sin(2) + -2*e**(2)
+    True
     """
-    pass
+    function = function.replace('^', '**')
+    func_to_eval = ''
+    for element in function:
+        if element == 'x':
+            func_to_eval = func_to_eval + '(x)'
+        else:
+            func_to_eval += element
+    
+    return eval(func_to_eval.replace('x', str(point)))
 
 
-def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) -> float:
+def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) -> float: # Nataliia`s function
     """
     Finds the solution of the equation (x value) 'func = 0' on the interval [a, b].
     Start with 'start' and stops  when |func(x_i)| < epsilon
@@ -96,4 +170,15 @@ def newtons_method(func: str, a: float, b: float, start: float, epsilon: float) 
     :param epsilon: accuracy of the final point
     :return: point at x-axis
     """
-    pass
+    if b < a:
+        raise ValueError('Incorrect input. B < A')
+    MAX_ITER = 1000
+    iter = 0
+    x0 = start
+    while abs(evaluate_at_point(func, x0)) - epsilon > 0:
+        x0 -= evaluate_at_point(func,x0) / evaluate_at_point(find_derivative(func),x0)
+        if iter > MAX_ITER:
+            raise ValueError('THE RANGE IS TOO BIG OR THERE IS NO X AT [a, b]')
+        iter += 1
+    
+    return x0
