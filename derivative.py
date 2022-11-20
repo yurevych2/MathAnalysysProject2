@@ -80,12 +80,7 @@ def combine_multipliers(der, others):
     >>> combine_multipliers(found_derivative, other)
     '2'
     """
-    all_mult = [der] + others
-    comb_mult = ""
-    for element in all_mult:
-        comb_mult += element+"*"
-    comb_mult = comb_mult[:-1]
-    return comb_mult
+    pass
 
 
 def derivative_of_product(some_func: list) -> str:
